@@ -43,6 +43,8 @@ object BasketSerializerRegistry extends JsonSerializerRegistry {
     JsonSerializer[GetBasket.type],
     JsonSerializer[ItemAdded],
     JsonSerializer[BasketEntityState],
-    JsonSerializer[Basket]
+    JsonSerializer[Basket],
+    JsonSerializer[OrderPlaced],
+    JsonSerializer[PlaceOrder.type]
   )
 }
