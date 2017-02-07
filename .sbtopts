@@ -1,0 +1,7 @@
+-J-Xms512M
+-J-Xmx4G
+-J-Xss4M
+-J-XX:MaxMetaspaceSize=1024M
+-J-XX:+UseConcMarkSweepGC
+-J-XX:+CMSClassUnloadingEnabled
+-Duser.timezone=GMT
