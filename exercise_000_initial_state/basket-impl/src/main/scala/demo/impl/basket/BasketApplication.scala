@@ -7,7 +7,7 @@ import com.lightbend.lagom.scaladsl.devmode.LagomDevModeComponents
 import com.lightbend.lagom.scaladsl.persistence.cassandra.CassandraPersistenceComponents
 import com.lightbend.lagom.scaladsl.playjson.{JsonSerializer, JsonSerializerRegistry}
 import com.lightbend.lagom.scaladsl.server._
-import demo.api.basket.{BasketService, Item}
+import demo.api.basket.{BasketService}
 import play.api.libs.ws.ahc.AhcWSComponents
 import com.softwaremill.macwire._
 
@@ -18,7 +18,8 @@ abstract class BasketApplication(ctx: LagomApplicationContext) extends LagomAppl
   with LagomKafkaComponents
   with CassandraPersistenceComponents {
   override def lagomServer: LagomServer = LagomServer.forServices {
-    bindService[BasketService].to(wire[BasketServiceImpl])
+    ???
+    //bindService[BasketService].to(wire[BasketServiceImpl])
   }
 }
 

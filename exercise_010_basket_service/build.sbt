@@ -7,6 +7,8 @@ val scalaTest = "org.scalatest" %% "scalatest" % "3.0.1" % "test"
 val playJsonDerivedCodecs = "org.julienrf" %% "play-json-derived-codecs" % "3.3"
 val macwire = "com.softwaremill.macwire" %% "macros" % "2.2.5" % "provided"
 
+val step = "010"
+
 lazy val basketApi = project("basket-api")
   .settings(version := "1.0-SNAPSHOT")
   .settings(
@@ -28,12 +30,14 @@ lazy val basketImpl = project("basket-impl")
       lagomScaladslTestKit)
   )
 
-def project(id: String) = Project(id, base = file(id))
+def project(id: String) = Project(s"${id}_$step", base = file(id))
   .settings(javacOptions in compile ++= Seq("-encoding", "UTF-8", "-source", "1.8", "-target", "1.8", "-Xlint:unchecked", "-Xlint:deprecation"))
-  .settings(jacksonParameterNamesJavacSettings: _*) // applying it to every project even if not strictly needed.
+  .settings(jacksonParameterNamesJavacSettings: _*)
 
 
 // See https://github.com/FasterXML/jackson-module-parameter-names
 lazy val jacksonParameterNamesJavacSettings = Seq(
   javacOptions in compile += "-parameters"
 )
+
+aggregateProjects(basketApi, basketImpl)

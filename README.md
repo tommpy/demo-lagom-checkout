@@ -17,21 +17,8 @@ It has the following projects defined:
   
 - **exercise_000_initial_state**
     - Web Project, User, Security
-- **exercise_010_item_service**
-    - Implement Item Service Commands
-- **exercise_020_item_service_commands**
-    - Implement the commands for the Item Service
-- **exercise_030_item_service_queries**
-    - Implement the queries for the Item Service
-- **exercise_040_item_service_events**
-    - Implement the events for the Item Service
-- **exercise_050_item_service_consume_events**
-    - Consume events in the Item Service
-- **exercise_060_bidding_service**
-    - Implement the Bidding Service
-- **exercise_070_search_service**
-    - Implement the Search Service
-    - Ideally as an external project.
+- **exercise_010_basket_service**
+    - Add basic basket functionality
   
 # Documentation
 
