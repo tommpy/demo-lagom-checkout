@@ -4,6 +4,7 @@ lazy val project_template = (project in file("."))
     exercise_000_initial_state,
     exercise_010_basket_service,
     exercise_020_basket_entity,
+    exercise_021_get_basket_price,
     exercise_030_place_order,
     exercise_040_order_service
  )
@@ -21,6 +22,10 @@ lazy val exercise_010_basket_service = project
   .dependsOn(common % "test->test;compile->compile")
 
 lazy val exercise_020_basket_entity = project
+  .settings(CommonSettings.commonSettings: _*)
+  .dependsOn(common % "test->test;compile->compile")
+
+lazy val exercise_021_get_basket_price = project
   .settings(CommonSettings.commonSettings: _*)
   .dependsOn(common % "test->test;compile->compile")
 
