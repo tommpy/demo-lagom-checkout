@@ -1,4 +1,4 @@
-import akka.{Done, NotUsed}
+import akka.NotUsed
 import com.lightbend.lagom.scaladsl.playjson.JsonSerializerRegistry
 import com.lightbend.lagom.scaladsl.server.LocalServiceLocator
 import com.lightbend.lagom.scaladsl.testkit.ServiceTest
@@ -20,7 +20,7 @@ class BasketServiceSpec extends AsyncWordSpec with Matchers with BeforeAndAfterA
   val client = service.serviceClient.implement[BasketService]
 
   "Basket Service" should {
-    "add a single item" in {
+    "add a single item and get the basket" in {
       client.addItem("basket1").invoke(Item("Apple", 50)).flatMap { response =>
         response should ===(NotUsed)
 
@@ -36,14 +36,32 @@ class BasketServiceSpec extends AsyncWordSpec with Matchers with BeforeAndAfterA
       }
     }
 
-    "add a multiple items" in {
+    "add multiple items" in {
       val items = "Apple" -> 50 :: "Apple" -> 50 :: "Orange" -> 30 :: Nil
 
       Future.sequence(items.map(i => client.addItem("basket3").invoke(Item(i._1, i._2)))).flatMap{ f =>
-        client.getBasket("basket3").invoke().map { getItemsResponse =>
+        client.getBasket("basket3").invoke().flatMap { getItemsResponse =>
           getItemsResponse.items should contain(Item("Apple", 50))
           getItemsResponse.items should contain(Item("Orange", 30))
           getItemsResponse.total should===(130)
+
+          client.getTotal("basket3").invoke().map { getItemsResponse =>
+            getItemsResponse should===(130)
+          }
+        }
+      }
+    }
+
+    "clear the basket" in {
+      val items = "Apple" -> 50 :: "Apple" -> 50 :: "Orange" -> 30 :: Nil
+
+      Future.sequence(items.map(i => client.addItem("basket4").invoke(Item(i._1, i._2)))).flatMap{ f =>
+        client.clearAll("basket4").invoke().flatMap { clearBasketResponse =>
+          clearBasketResponse should ===(NotUsed)
+
+          client.getBasket("basket4").invoke().map { basketResponse =>
+            basketResponse should===(Basket(Seq(), 0))
+          }
         }
       }
     }

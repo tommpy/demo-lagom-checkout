@@ -7,9 +7,9 @@ import com.lightbend.lagom.scaladsl.devmode.LagomDevModeComponents
 import com.lightbend.lagom.scaladsl.persistence.cassandra.CassandraPersistenceComponents
 import com.lightbend.lagom.scaladsl.playjson.{JsonSerializer, JsonSerializerRegistry}
 import com.lightbend.lagom.scaladsl.server._
-import demo.api.basket.{Basket, BasketService, Item}
-import play.api.libs.ws.ahc.AhcWSComponents
 import com.softwaremill.macwire._
+import demo.api.basket.{Basket, BasketService}
+import play.api.libs.ws.ahc.AhcWSComponents
 
 import scala.collection.immutable.Seq
 

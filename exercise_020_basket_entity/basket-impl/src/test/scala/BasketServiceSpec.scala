@@ -36,7 +36,7 @@ class BasketServiceSpec extends AsyncWordSpec with Matchers with BeforeAndAfterA
       }
     }
 
-    "add a multiple items" in {
+    "add multiple items" in {
       val items = "Apple" -> 50 :: "Apple" -> 50 :: "Orange" -> 30 :: Nil
 
       Future.sequence(items.map(i => client.addItem("basket3").invoke(Item(i._1, i._2)))).flatMap{ f =>

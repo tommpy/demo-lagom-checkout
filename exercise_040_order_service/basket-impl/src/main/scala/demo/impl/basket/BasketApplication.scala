@@ -7,7 +7,8 @@ import com.lightbend.lagom.scaladsl.devmode.LagomDevModeComponents
 import com.lightbend.lagom.scaladsl.persistence.cassandra.CassandraPersistenceComponents
 import com.lightbend.lagom.scaladsl.playjson.{JsonSerializer, JsonSerializerRegistry}
 import com.lightbend.lagom.scaladsl.server._
-import demo.api.basket.{Basket, BasketService, Item}
+import com.softwaremill.macwire._
+import demo.api.basket.{Basket, BasketService}
 import play.api.libs.ws.ahc.AhcWSComponents
 import com.softwaremill.macwire._
 
@@ -41,10 +42,14 @@ object BasketSerializerRegistry extends JsonSerializerRegistry {
   override def serializers: Seq[JsonSerializer[_]] = Seq (
     JsonSerializer[AddItem],
     JsonSerializer[GetBasket.type],
+    JsonSerializer[GetTotal.type],
+    JsonSerializer[ClearAll.type],
+    JsonSerializer[BasketCleared.type],
     JsonSerializer[ItemAdded],
     JsonSerializer[BasketEntityState],
     JsonSerializer[Basket],
     JsonSerializer[OrderPlaced],
-    JsonSerializer[PlaceOrder.type]
+    JsonSerializer[PlaceOrder.type],
+    JsonSerializer[Basket]
   )
 }

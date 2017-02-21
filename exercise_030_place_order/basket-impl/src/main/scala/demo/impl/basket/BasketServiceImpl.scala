@@ -20,10 +20,17 @@ class BasketServiceImpl(persistentEntities: PersistentEntityRegistry)(implicit e
     persistentEntities.refFor[BasketEntity](basketId).ask(AddItem(item)).map(_ => NotUsed)
   }
 
+  override def getTotal(basketId: String): ServiceCall[NotUsed, Int] = ServiceCall { req =>
+    persistentEntities.refFor[BasketEntity](basketId).ask(GetTotal)
+  }
+
+  override def clearAll(basketId: String): ServiceCall[NotUsed, NotUsed] = ServiceCall { req =>
+    persistentEntities.refFor[BasketEntity](basketId).ask(ClearAll).map(x => NotUsed)
+  }
+
   override def placeOrder(basketId: String): ServiceCall[NotUsed, NotUsed] = ServiceCall { req =>
     persistentEntities.refFor[BasketEntity](basketId).ask(PlaceOrder).map(_ => NotUsed)
   }
-
 
   override def placedOrders: Topic[demo.api.basket.OrderPlaced] =
       TopicProducer.taggedStreamWithOffset(BasketEntityEvent.Tag.allTags.to[immutable.Seq]) { (tag, offset) =>

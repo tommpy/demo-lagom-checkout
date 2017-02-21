@@ -30,6 +30,23 @@ class BasketSpec extends WordSpecLike with Matchers with BeforeAndAfterAll with 
       val getItemsOutcome = driver.run(GetBasket)
       getItemsOutcome.issues should ===(Nil)
       getItemsOutcome.replies should ===(List(Basket(Seq(Item("Apple", 50)), 50)))
+
+      val getPriceOutcome = driver.run(GetTotal)
+      getPriceOutcome.issues should ===(Nil)
+      getPriceOutcome.replies should ===(List(50))
+    }
+
+    "Clear the basket" in {
+      val driver = new PersistentEntityTestDriver(system, new BasketEntity, "Basket1")
+      val addItemOutcome = driver.run(AddItem(Item("Apple", 50)))
+
+      val clearOutcome = driver.run(ClearAll)
+      clearOutcome.issues should ===(Nil)
+      clearOutcome.replies should ===(List(Done))
+
+      val getBasketOutcome = driver.run(GetBasket)
+      getBasketOutcome.issues should ===(Nil)
+      getBasketOutcome.replies should ===(List(Basket(Seq(), 0)))
     }
 
     "Place an order" in {

@@ -23,7 +23,9 @@ object OrderPlaced {
 
 trait BasketService extends Service {
   def getBasket(basketId: String): ServiceCall[NotUsed, Basket]
+  def getTotal(basketId: String): ServiceCall[NotUsed, Int]
   def addItem(basketId: String): ServiceCall[Item, NotUsed]
+  def clearAll(basketId: String): ServiceCall[NotUsed, NotUsed]
   def placeOrder(basketId: String): ServiceCall[NotUsed, NotUsed]
   def placedOrders: Topic[OrderPlaced]
 
@@ -33,7 +35,9 @@ trait BasketService extends Service {
 
     named("basket").withCalls(
       restCall(GET, "/basket/:basketId", getBasket _),
+      restCall(GET, "/basket/:basketId/total", getTotal _),
       restCall(POST, "/basket/:basketId/items", addItem _),
+      restCall(DELETE, "/basket/:basketId/items", clearAll _),
       restCall(POST, "/basket/:basketId/order", placeOrder _)
     ).withTopics(
       topic("placed-orders", placedOrders)

@@ -13,12 +13,16 @@ class BasketServiceImpl(persistentEntities: PersistentEntityRegistry)(implicit e
   private var baskets = Map[String, Basket]()
 
   override def getBasket(basketId: String): ServiceCall[NotUsed, Basket] = ServiceCall { req =>
-    Future.successful(baskets.getOrElse(basketId, Basket(Seq(), 0)))
+    baskets.synchronized {
+      Future.successful(baskets.getOrElse(basketId, Basket(Seq(), 0)))
+    }
   }
 
   override def addItem(basketId: String): ServiceCall[Item, NotUsed] = ServiceCall { item =>
-    val newItems = baskets.get(basketId).toSeq.flatMap(_.items) :+ item
-    baskets  = baskets.+(basketId -> Basket(newItems, newItems.map(_.price).sum))
+    baskets.synchronized {
+      val newItems = baskets.get(basketId).toSeq.flatMap(_.items) :+ item
+      baskets  = baskets.+(basketId -> Basket(newItems, newItems.map(_.price).sum))
+    }
     Future.successful(NotUsed)
   }
 }

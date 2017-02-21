@@ -1,7 +1,6 @@
 package demo.api.basket
 
 import akka.NotUsed
-import com.lightbend.lagom.scaladsl.api.Service.restCall
 import com.lightbend.lagom.scaladsl.api.{Descriptor, Service, ServiceCall}
 import com.lightbend.lagom.scaladsl.api.transport._
 import play.api.libs.json.{Format, Json}
