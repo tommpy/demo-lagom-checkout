@@ -23,6 +23,6 @@ object Navigation {
       .map(r => r.project)
       .filter(_.startsWith("exercise_"))
       .sorted
-    Command.process(s"project ${refs.head}", state)
+    Command.process(s"project ${refs.headOption.getOrElse("")}", state)
   }
 }
