@@ -26,6 +26,6 @@ object Navigation {
 
     refs.headOption.map { h =>
       Command.process(s"project $h", state)
-    }.getOrElse(_ => state)
+    }.getOrElse(state)
   }
 }
