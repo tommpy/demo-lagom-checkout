@@ -53,12 +53,23 @@ final class BasketEntity extends PersistentEntity {
   override def behavior: Behavior = {
     Actions()
       .onCommand[AddItem, Done] {
-        case (AddItem(item), ctx, state) =>
-          ctx.thenPersist(ItemAdded(item))(_ => ctx.reply(Done))
+        case (AddItem(item), ctx, state) => {
+          if(state.ordered) {
+            ctx.invalidCommand("The order has been placed and cannot be modified")
+            ctx.done
+          } else {
+            ctx.thenPersist(ItemAdded(item))(_ => ctx.reply(Done))
+          }
+        }
       }
       .onCommand[ClearAll.type, Done] {
-        case (ClearAll, ctx, state) =>
+      case (ClearAll, ctx, state) =>
+        if(state.ordered) {
+          ctx.invalidCommand("The order has been placed and cannot be modified")
+          ctx.done
+        } else {
           ctx.thenPersist(BasketCleared)(_ => ctx.reply(Done))
+        }
       }
       .onCommand[PlaceOrder.type, Done] {
         case (PlaceOrder, ctx, state) =>

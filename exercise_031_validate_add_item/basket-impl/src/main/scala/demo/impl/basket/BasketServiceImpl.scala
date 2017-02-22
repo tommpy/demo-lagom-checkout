@@ -4,8 +4,10 @@ import akka.NotUsed
 import com.lightbend.lagom.scaladsl.api.ServiceCall
 import com.lightbend.lagom.scaladsl.api.broker.Topic
 import com.lightbend.lagom.scaladsl.broker.TopicProducer
+import com.lightbend.lagom.scaladsl.persistence.PersistentEntity.InvalidCommandException
 import com.lightbend.lagom.scaladsl.persistence.{EventStreamElement, PersistentEntityRegistry}
 import demo.api.basket.{Basket, BasketService, Item}
+import com.lightbend.lagom.scaladsl.api.transport.BadRequest
 
 import scala.collection.immutable
 import scala.concurrent.ExecutionContext
@@ -17,7 +19,11 @@ class BasketServiceImpl(persistentEntities: PersistentEntityRegistry)(implicit e
   }
 
   override def addItem(basketId: String): ServiceCall[Item, NotUsed] = ServiceCall { item =>
-    persistentEntities.refFor[BasketEntity](basketId).ask(AddItem(item)).map(_ => NotUsed)
+    persistentEntities.refFor[BasketEntity](basketId).ask(AddItem(item))
+      .map(_ => NotUsed)
+      .recoverWith {
+        case e: InvalidCommandException => throw BadRequest(e.message)
+      }
   }
 
   override def getTotal(basketId: String): ServiceCall[NotUsed, Int] = ServiceCall { req =>

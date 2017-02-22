@@ -1,5 +1,6 @@
 import akka.NotUsed
 import com.lightbend.lagom.scaladsl.playjson.JsonSerializerRegistry
+import com.lightbend.lagom.scaladsl.api.transport.BadRequest
 import com.lightbend.lagom.scaladsl.server.LocalServiceLocator
 import com.lightbend.lagom.scaladsl.testkit.ServiceTest
 import demo.api.basket.{Basket, BasketService, Item}
@@ -74,6 +75,28 @@ class BasketServiceSpec extends AsyncWordSpec with Matchers with BeforeAndAfterA
         client.placeOrder("basket1").invoke().map { response =>
           response should ===(NotUsed)
         }
+      }
+    }
+
+    "return an error if an item is added after the order is placed" in {
+      val client = service.serviceClient.implement[BasketService]
+
+      recoverToSucceededIf[BadRequest] {
+        for (a <- client.addItem("basket1").invoke(Item("Apple", 50));
+             b <- client.placeOrder("basket1").invoke();
+             c <- client.addItem("basket1").invoke(Item("Apple", 50)))
+          yield c should ===(NotUsed)
+      }
+    }
+
+    "return an error if clear all is called after the order is placed" in {
+      val client = service.serviceClient.implement[BasketService]
+
+      recoverToSucceededIf[BadRequest] {
+        for (a <- client.addItem("basket1").invoke(Item("Apple", 50));
+             b <- client.placeOrder("basket1").invoke();
+             c <- client.clearAll("basket1").invoke())
+          yield c should ===(NotUsed)
       }
     }
   }
