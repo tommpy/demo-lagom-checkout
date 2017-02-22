@@ -66,8 +66,12 @@ man [e] > lagom-checkout-demo > initial-state > nextExercise
 [INFO] Moved to exercise_001_basket_service
 
 // move to the previous exercise
-man [e] > lagom-checkout-demo > define-a-class > prevExercise
+man [e] > lagom-checkout-demo > basket_service > prevExercise
 [INFO] Moved to exercise_000_initial_state
+
+// Get the answers to the exercise
+man [e] > lagom-checkout-demo > basket_service > pullSolution
+[INFO] Solution for exercise exercise_010_basket_service pulled successfully
 
 // save the current state of an exercise for later retrieval and study
 man [e] > lagom-checkout-demo > initial-state > saveState
