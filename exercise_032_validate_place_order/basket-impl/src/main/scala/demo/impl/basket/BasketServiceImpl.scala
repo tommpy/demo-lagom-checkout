@@ -39,7 +39,11 @@ class BasketServiceImpl(persistentEntities: PersistentEntityRegistry)(implicit e
   }
 
   override def placeOrder(basketId: String): ServiceCall[NotUsed, NotUsed] = ServiceCall { req =>
-    persistentEntities.refFor[BasketEntity](basketId).ask(PlaceOrder).map(_ => NotUsed)
+    persistentEntities.refFor[BasketEntity](basketId).ask(PlaceOrder)
+      .map(x => NotUsed)
+      .recoverWith {
+        case e: InvalidCommandException => throw BadRequest(e.message)
+      }
   }
 
   override def placedOrders: Topic[demo.api.basket.OrderPlaced] =

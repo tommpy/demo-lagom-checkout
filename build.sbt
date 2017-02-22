@@ -8,6 +8,7 @@ lazy val project_template = (project in file("."))
     exercise_022_clear_basket,
     exercise_030_place_order,
     exercise_031_validate_add_item,
+    exercise_032_validate_place_order,
     exercise_040_order_service
  )
   .settings(CommonSettings.commonSettings: _*)
@@ -40,6 +41,10 @@ lazy val exercise_030_place_order = project
   .dependsOn(common % "test->test;compile->compile")
 
 lazy val exercise_031_validate_add_item = project
+  .settings(CommonSettings.commonSettings: _*)
+  .dependsOn(common % "test->test;compile->compile")
+
+lazy val exercise_032_validate_place_order = project
   .settings(CommonSettings.commonSettings: _*)
   .dependsOn(common % "test->test;compile->compile")
 

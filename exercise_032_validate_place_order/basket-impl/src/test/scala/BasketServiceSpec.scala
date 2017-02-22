@@ -99,5 +99,15 @@ class BasketServiceSpec extends AsyncWordSpec with Matchers with BeforeAndAfterA
           yield c should ===(NotUsed)
       }
     }
+
+    "return an error if order is placed on an empty basket" in {
+      val client = service.serviceClient.implement[BasketService]
+
+      recoverToSucceededIf[BadRequest] {
+        client.placeOrder("basket8").invoke().map { r =>
+          r should ===(NotUsed)
+        }
+      }
+    }
   }
 }

@@ -73,5 +73,11 @@ class BasketSpec extends WordSpecLike with Matchers with BeforeAndAfterAll with 
       val outcome = driver.run(ClearAll)
       outcome.replies should ===(List(InvalidCommandException("The order has been placed and cannot be modified")))
     }
+
+    "Return InvalidCommand if order is called on an empty basket" in {
+      val driver = new PersistentEntityTestDriver(system, new BasketEntity, "Basket5")
+      val outcome = driver.run(PlaceOrder)
+      outcome.replies should ===(List(InvalidCommandException("Can't place an order for an empty basket")))
+    }
   }
 }
