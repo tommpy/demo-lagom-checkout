@@ -10,7 +10,7 @@ Now we will introduce a whole new service which manages the orders
 * Implement an Order entity
   * Commands: CreateOrder, GetOrder
   * Events: OrderInitialized, OrderState
-  * State: {"items": [{"name": "Apple", "price": 10}], "total": 10}
+  * State: {"items": ["Apple"]}
 * OrderServiceImpl
   * Wire this up to the OrderEntity
 * BasketServiceSubscriber
