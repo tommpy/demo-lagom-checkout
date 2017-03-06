@@ -6,14 +6,13 @@ import com.lightbend.lagom.scaladsl.api.broker.Topic
 import com.lightbend.lagom.scaladsl.broker.TopicProducer
 import com.lightbend.lagom.scaladsl.persistence.PersistentEntity.InvalidCommandException
 import com.lightbend.lagom.scaladsl.persistence.{EventStreamElement, PersistentEntityRegistry}
-import demo.api.basket.{Basket, BasketService, Item}
-import com.lightbend.lagom.scaladsl.api.transport.BadRequest
+import demo.api.basket.{Basket, BasketService, ExtraTransportExceptions, Item}
 
 import scala.collection.immutable
 import scala.concurrent.ExecutionContext
 
 class BasketServiceImpl(persistentEntities: PersistentEntityRegistry)(implicit ec: ExecutionContext)
-  extends BasketService {
+  extends BasketService with ExtraTransportExceptions{
   override def getBasket(basketId: String): ServiceCall[NotUsed, Basket] = ServiceCall { req =>
     persistentEntities.refFor[BasketEntity](basketId).ask(GetBasket)
   }
@@ -31,11 +30,19 @@ class BasketServiceImpl(persistentEntities: PersistentEntityRegistry)(implicit e
   }
 
   override def clearAll(basketId: String): ServiceCall[NotUsed, NotUsed] = ServiceCall { req =>
-    persistentEntities.refFor[BasketEntity](basketId).ask(ClearAll).map(x => NotUsed)
+    persistentEntities.refFor[BasketEntity](basketId).ask(ClearAll)
+      .map(x => NotUsed)
+      .recoverWith {
+        case e: InvalidCommandException => throw BadRequest(e.message)
+      }
   }
 
   override def placeOrder(basketId: String): ServiceCall[NotUsed, NotUsed] = ServiceCall { req =>
-    persistentEntities.refFor[BasketEntity](basketId).ask(PlaceOrder).map(_ => NotUsed)
+    persistentEntities.refFor[BasketEntity](basketId).ask(PlaceOrder)
+      .map(x => NotUsed)
+      .recoverWith {
+        case e: InvalidCommandException => throw BadRequest(e.message)
+      }
   }
 
   override def placedOrders: Topic[demo.api.basket.OrderPlaced] =

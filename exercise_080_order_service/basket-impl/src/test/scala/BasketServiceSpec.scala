@@ -1,15 +1,14 @@
 import akka.NotUsed
 import com.lightbend.lagom.scaladsl.playjson.JsonSerializerRegistry
-import com.lightbend.lagom.scaladsl.api.transport.BadRequest
 import com.lightbend.lagom.scaladsl.server.LocalServiceLocator
 import com.lightbend.lagom.scaladsl.testkit.ServiceTest
-import demo.api.basket.{Basket, BasketService, Item}
+import demo.api.basket.{Basket, BasketService, ExtraTransportExceptions, Item}
 import demo.impl.basket.{BasketApplication, BasketSerializerRegistry}
 import org.scalatest.{AsyncWordSpec, BeforeAndAfterAll, Matchers}
 
 import scala.concurrent.Future
 
-class BasketServiceSpec extends AsyncWordSpec with Matchers with BeforeAndAfterAll {
+class BasketServiceSpec extends AsyncWordSpec with Matchers with BeforeAndAfterAll with ExtraTransportExceptions {
   lazy val service = ServiceTest.startServer(ServiceTest.defaultSetup.withCassandra(true)) { ctx =>
     new BasketApplication(ctx) with LocalServiceLocator {
       override def jsonSerializerRegistry: JsonSerializerRegistry = BasketSerializerRegistry
@@ -69,10 +68,10 @@ class BasketServiceSpec extends AsyncWordSpec with Matchers with BeforeAndAfterA
 
     "place an order" in {
       val client = service.serviceClient.implement[BasketService]
-      client.addItem("basket1").invoke(Item("Apple", 50)).flatMap { response =>
+      client.addItem("basket5").invoke(Item("Apple", 50)).flatMap { response =>
         response should ===(NotUsed)
 
-        client.placeOrder("basket1").invoke().map { response =>
+        client.placeOrder("basket5").invoke().map { response =>
           response should ===(NotUsed)
         }
       }
@@ -82,9 +81,9 @@ class BasketServiceSpec extends AsyncWordSpec with Matchers with BeforeAndAfterA
       val client = service.serviceClient.implement[BasketService]
 
       recoverToSucceededIf[BadRequest] {
-        for (a <- client.addItem("basket1").invoke(Item("Apple", 50));
-             b <- client.placeOrder("basket1").invoke();
-             c <- client.addItem("basket1").invoke(Item("Apple", 50)))
+        for (a <- client.addItem("basket6").invoke(Item("Apple", 50));
+             b <- client.placeOrder("basket6").invoke();
+             c <- client.addItem("basket6").invoke(Item("Apple", 50)))
           yield c should ===(NotUsed)
       }
     }
@@ -93,10 +92,20 @@ class BasketServiceSpec extends AsyncWordSpec with Matchers with BeforeAndAfterA
       val client = service.serviceClient.implement[BasketService]
 
       recoverToSucceededIf[BadRequest] {
-        for (a <- client.addItem("basket1").invoke(Item("Apple", 50));
-             b <- client.placeOrder("basket1").invoke();
-             c <- client.clearAll("basket1").invoke())
+        for (a <- client.addItem("basket7").invoke(Item("Apple", 50));
+             b <- client.placeOrder("basket7").invoke();
+             c <- client.clearAll("basket7").invoke())
           yield c should ===(NotUsed)
+      }
+    }
+
+    "return an error if order is placed on an empty basket" in {
+      val client = service.serviceClient.implement[BasketService]
+
+      recoverToSucceededIf[BadRequest] {
+        client.placeOrder("basket8").invoke().map { r =>
+          r should ===(NotUsed)
+        }
       }
     }
   }

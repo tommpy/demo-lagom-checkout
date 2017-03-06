@@ -72,8 +72,15 @@ final class BasketEntity extends PersistentEntity {
         }
       }
       .onCommand[PlaceOrder.type, Done] {
-        case (PlaceOrder, ctx, state) =>
-          ctx.thenPersist(OrderPlaced(entityId, state.currentBasket))(_ => ctx.reply(Done))
+        case (PlaceOrder, ctx, state) => {
+          if(state.currentBasket.items.isEmpty) {
+            ctx.invalidCommand("Can't place an order for an empty basket")
+            ctx.done
+            ctx.done
+          } else {
+            ctx.thenPersist(OrderPlaced(entityId, state.currentBasket))(_ => ctx.reply(Done))
+          }
+        }
       }
       .onReadOnlyCommand[GetBasket.type, Basket] {
         case (GetBasket, ctx, state) => ctx.reply(state.currentBasket)

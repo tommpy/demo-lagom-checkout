@@ -1,15 +1,14 @@
 import akka.NotUsed
 import com.lightbend.lagom.scaladsl.playjson.JsonSerializerRegistry
-import com.lightbend.lagom.scaladsl.api.transport.BadRequest
 import com.lightbend.lagom.scaladsl.server.LocalServiceLocator
 import com.lightbend.lagom.scaladsl.testkit.ServiceTest
-import demo.api.basket.{Basket, BasketService, Item}
+import demo.api.basket.{Basket, BasketService, ExtraTransportExceptions, Item}
 import demo.impl.basket.{BasketApplication, BasketSerializerRegistry}
 import org.scalatest.{AsyncWordSpec, BeforeAndAfterAll, Matchers}
 
 import scala.concurrent.Future
 
-class BasketServiceSpec extends AsyncWordSpec with Matchers with BeforeAndAfterAll {
+class BasketServiceSpec extends AsyncWordSpec with Matchers with BeforeAndAfterAll with ExtraTransportExceptions {
   lazy val service = ServiceTest.startServer(ServiceTest.defaultSetup.withCassandra(true)) { ctx =>
     new BasketApplication(ctx) with LocalServiceLocator {
       override def jsonSerializerRegistry: JsonSerializerRegistry = BasketSerializerRegistry

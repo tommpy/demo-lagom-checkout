@@ -10,7 +10,6 @@ import com.lightbend.lagom.scaladsl.server._
 import com.softwaremill.macwire._
 import demo.api.basket.{Basket, BasketService}
 import play.api.libs.ws.ahc.AhcWSComponents
-import com.softwaremill.macwire._
 
 import scala.collection.immutable.Seq
 
@@ -21,6 +20,7 @@ abstract class BasketApplication(ctx: LagomApplicationContext) extends LagomAppl
   override def lagomServer: LagomServer = LagomServer.forServices {
     bindService[BasketService].to(wire[BasketServiceImpl])
   }
+
 
   persistentEntityRegistry.register(wire[BasketEntity])
 }

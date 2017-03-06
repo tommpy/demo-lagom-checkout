@@ -4,6 +4,8 @@ import akka.NotUsed
 import com.lightbend.lagom.scaladsl.api.broker.Topic
 import com.lightbend.lagom.scaladsl.api.{Descriptor, Service, ServiceCall}
 import com.lightbend.lagom.scaladsl.api.transport._
+import demo.api.basket.ExtraTransportExceptions.CustomExceptionSerializer
+import play.api.Environment
 import play.api.libs.json.{Format, Json}
 
 case class Item(name: String, price: Int)
@@ -41,6 +43,6 @@ trait BasketService extends Service {
       restCall(POST, "/basket/:basketId/order", placeOrder _)
     ).withTopics(
       topic("placed-orders", placedOrders)
-    )
+    ).withExceptionSerializer(new CustomExceptionSerializer(Environment.simple()))
   }
 }
