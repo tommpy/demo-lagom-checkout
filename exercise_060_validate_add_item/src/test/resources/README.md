@@ -1,4 +1,4 @@
-exercise_060_place_order
+exercise_060_validate_add_item
 
 ## Exercise 060 > Validate Add Item
 

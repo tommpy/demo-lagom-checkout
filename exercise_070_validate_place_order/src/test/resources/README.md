@@ -1,4 +1,4 @@
-exercise_070_place_order
+exercise_070_validate_place_order
 
 ## Exercise 070 > Validate Place Order
 

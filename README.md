@@ -29,7 +29,7 @@ You will need to have the following installed in order to use this material:
 - Read the first chapters of the [Getting Started Guide](http://www.scala-sbt.org/release/tutorial/index.html)
 - Starting `sbt` takes you to a **interactive session**
 - Take a look at `build.sbt` and the other `.sbt` files for this course
-- Change directory to the `fast-track-scala-advanced-scala` directory and start `sbt` as follows:
+- Change directory to the `demo-lagom-checkout` directory and start `sbt` as follows:
 
 ```scala
 $ sbt
