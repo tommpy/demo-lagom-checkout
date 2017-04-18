@@ -58,7 +58,7 @@ Navigation through the courseware is possibile with a few `sbt` commands. Also, 
 
 ```scala
 // show the current exercise
-man [e] > lagom-checkout-demo > initial-state > show
+man [e] > lagom-checkout-demo > initial-state > showExerciseId
 [INFO] Currently at exercise_000_initial_state
 
 // move to the next exercise
